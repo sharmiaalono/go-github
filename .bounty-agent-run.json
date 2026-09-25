@@ -1,0 +1,12 @@
+{
+  "bountyId": "github:sharmiaalono/go-github#5",
+  "repository": "sharmiaalono/go-github",
+  "issueNumber": 5,
+  "reward": {
+    "amount": 10,
+    "currency": "USD"
+  },
+  "payoutAddress": "0xF7cb41d86B94405553bbfadBD64C0A1b338cC580",
+  "verified": true,
+  "timestamp": "2026-09-25T10:53:18.750Z"
+}
