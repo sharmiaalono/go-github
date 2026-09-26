@@ -1,17 +1,17 @@
 package mocks
 
 import (
-	"net/http"
+	"context"
 	"github.com/example/go-github/client"
 )
 
 type ClientMock struct {
-	DoListFunc func(urlStr string, opts *client.ListOptions) (*client.Response, *http.Response, error)
+	ListFunc func(ctx context.Context, urlStr string, opt *client.ListOptions) ([]string, *client.Response, error)
 }
 
-func (m *ClientMock) DoList(urlStr string, opts *client.ListOptions) (*client.Response, *http.Response, error) {
-	if m.DoListFunc != nil {
-		return m.DoListFunc(urlStr, opts)
+func (m *ClientMock) List(ctx context.Context, urlStr string, opt *client.ListOptions) ([]string, *client.Response, error) {
+	if m.ListFunc != nil {
+		return m.ListFunc(ctx, urlStr, opt)
 	}
 	return nil, nil, nil
 }

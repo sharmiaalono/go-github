@@ -1,10 +1,8 @@
 # go-github
 
-A Go client library for interacting with APIs.
-
 ## Pagination
 
-Pagination is supported via `ListOptions`:
+Pagination in `go-github` is supported using `ListOptions`:
 
 ```go
 type ListOptions struct {
@@ -13,18 +11,21 @@ type ListOptions struct {
 }
 ```
 
-When `PerPage` is set to `0`, the `per_page` query parameter is safely omitted from the request URL, allowing the server to use its default page size.
+When `PerPage` is set to `0`, the `per_page` query parameter is safely omitted from requests, allowing the API to use its default page size.
 
-### Example
+### Example: Multi-page Fetching
 
 ```go
 opts := &client.ListOptions{Page: 1, PerPage: 0}
-resp, err := client.ListSomething(ctx, opts)
-if err != nil {
-    // handle error
-}
-
-if resp.NextPage() != 0 {
-    // fetch next page
+for {
+    items, resp, err := client.List(ctx, "https://api.example.com/items", opts)
+    if err != nil {
+        // handle error
+    }
+    // process items...
+    if resp.NextPage == 0 {
+        break
+    }
+    opts.Page = resp.NextPage
 }
 ```

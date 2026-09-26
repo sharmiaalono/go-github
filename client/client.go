@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"net/http"
 )
 
@@ -9,20 +10,19 @@ type Client struct {
 	HttpClient *http.Client
 }
 
-func NewClient(baseURL string) *Client {
+func NewClient() *Client {
 	return &Client{
-		BaseURL:    baseURL,
 		HttpClient: http.DefaultClient,
 	}
-}
+	}
 
-func (c *Client) DoList(urlStr string, opts *ListOptions) (*Response, *http.Response, error) {
-	urlStr, err := addOptions(urlStr, opts)
+func (c *Client) List(ctx context.Context, urlStr string, opt *ListOptions) ([]string, *Response, error) {
+	u, err := addOptions(urlStr, opt)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	req, err := http.NewRequest("GET", urlStr, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -31,11 +31,12 @@ func (c *Client) DoList(urlStr string, opts *ListOptions) (*Response, *http.Resp
 	if err != nil {
 		return nil, nil, err
 	}
+	defer resp.Body.Close()
 
-	response, err := parsePagination(resp)
+	pResp, err := parsePagination(resp)
 	if err != nil {
-		return response, resp, err
+		return nil, nil, err
 	}
 
-	return response, resp, nil
+	return nil, pResp, nil
 }
